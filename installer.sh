@@ -78,6 +78,8 @@ install_base() {
 		lsof \
 		make \
 		mount \
+		openresolv \
+		openvpn \
 		pinentry-curses \
 		silversearcher-ag \
 		ssh \
@@ -152,6 +154,29 @@ install_wifi() {
 	modprobe -r iwlwifi ; modprobe iwlwifi
 }
 
+install_pia() {
+	# Install Private Internet Access
+	# Run as root
+
+	apt-get install -y \
+		network-manager-openvpn \
+		network-manager \
+		network-manager-gnome \
+		network-manager-openvpn-gnome
+
+	mkdir -p /tmp/pia-install/installer
+	wget --https-only \
+		https://www.privateinternetaccess.com/openvpn/openvpn-strong.zip \
+		-O /tmp/pia-install/installer/openvpn-strong.zip
+
+	unzip /tmp/pia-install/installer/openvpn-strong.zip # add output location
+
+	cp /tmp/pia-install/installer/*.ovpn /etc/openvpn/
+	cp /tmp/pia-install/installer/*.pem /etc/openvpn/
+	cp /tmp/pia-install/installer/*.crt /etc/openvpn/
+
+}
+
 usage() {
 	echo -e "install.sh\\n\\tThis script installs my basic setup for a debian laptop\\n"
 	echo "Usage:"
@@ -160,6 +185,7 @@ usage() {
 	echo "  sudo                                - setup user as sudoer"
 	echo "  docker                              - install Docker CE"
 	echo "  wifi                                - install wifi drivers"
+	echo "  pia                                 - configure Private Internet Access with OpenVPN"
 }
 
 main() {
@@ -187,6 +213,9 @@ main() {
 	elif [[ $cmd == "wifi" ]]; then
 		check_is_sudo
 		install_wifi
+	elif [[ $cmd == "pia" ]]; then
+		check_is_sudo
+		install_pia
 	else
 		usage
 	fi
