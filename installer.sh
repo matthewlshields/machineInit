@@ -164,16 +164,27 @@ install_pia() {
 		network-manager-gnome \
 		network-manager-openvpn-gnome
 
-	mkdir -p /tmp/pia-install/installer
+	mkdir -p /tmp/pia-install/{installer, extract}
 	wget --https-only \
 		https://www.privateinternetaccess.com/openvpn/openvpn-strong.zip \
 		-O /tmp/pia-install/installer/openvpn-strong.zip
 
-	unzip /tmp/pia-install/installer/openvpn-strong.zip # add output location
+	unzip /tmp/pia-install/installer/openvpn-strong.zip -d /tmp/pia-install/extract/
 
-	cp /tmp/pia-install/installer/*.ovpn /etc/openvpn/
-	cp /tmp/pia-install/installer/*.pem /etc/openvpn/
-	cp /tmp/pia-install/installer/*.crt /etc/openvpn/
+	cp /tmp/pia-install/extract/*.ovpn /etc/openvpn/
+	cp /tmp/pia-install/extract/*.pem /etc/openvpn/
+	cp /tmp/pia-install/extract/*.crt /etc/openvpn/
+
+	# Update all of the ovpn files to use the credentials file
+	sed -i 's/^auth-user-pass$/& creds/' *.ovpn
+
+	# Add the commands to update the DNS entries in /etc/resolv.conf
+	#script-security 2
+	#up /etc/openvpn/update-resolv-conf
+	#down /etc/openvpn/update-resolv-conf
+
+	# Keeping it clean
+	rm -rf /tmp/pia-install
 
 }
 
