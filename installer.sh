@@ -192,6 +192,24 @@ install_pia() {
 
 }
 
+install_chrome() {
+
+	wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
+	echo "deb http://dl.google.com/linux/chrome/deb/ stable main" | sudo tee /etc/apt/sources.list.d/google-chrome.list
+
+	apt-get update
+	apt-get -y install google-chrome-stable
+}
+
+install_kubectl() {
+	apt-get update
+	apt-get install -y apt-transport-https
+	curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
+	echo "deb http://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee -a /etc/apt/sources.list.d/kubernetes.list
+	sudo apt-get update
+	sudo apt-get install -y kubectl
+}
+
 usage() {
 	echo -e "install.sh\\n\\tThis script installs my basic setup for a debian laptop\\n"
 	echo "Usage:"
@@ -201,6 +219,8 @@ usage() {
 	echo "  docker                              - install Docker CE"
 	echo "  wifi                                - install wifi drivers"
 	echo "  pia                                 - configure Private Internet Access with OpenVPN"
+	echo "  chrome                              - install Chrome browser"
+	echo "  kubectl								- install Kubernetes kubectl"
 }
 
 main() {
@@ -231,6 +251,12 @@ main() {
 	elif [[ $cmd == "pia" ]]; then
 		check_is_sudo
 		install_pia
+	elif [[ $cmd == "chrome" ]]; then
+		check_is_sudo
+		install_chrome
+	elif [[ $cmd == "kubectl" ]]; then
+		check_is_sudo
+		install_kubectl
 	else
 		usage
 	fi
