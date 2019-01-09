@@ -78,19 +78,3 @@ chrome(){
 		--host-resolver-rules="$map" "$args"
 
 }
-
-vscode(){
-	del_stopped vscode
-
-	docker run -d \
-		-v /etc/localtime:/etc/localtime:ro \
-		-v /tmp/.X11-unix:/tmp/.X11-unix  \
-		-v /$HOME:/home/user \
-		-e "DISPLAY=unix${DISPLAY}" \
-		--device /dev/dri \
-		--name vscode \
-		${DOCKER_REPO_PREFIX}/vscode
-}
-alias code="vscode"
-
-
