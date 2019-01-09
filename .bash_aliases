@@ -20,7 +20,7 @@ alias gc=". /usr/local/bin/gitdate && git commit -v "
 alias l="ls -lF ${colorflag}"
 
 # List all files colorized in long format, including dot files
-alias la="ls -lAF ${colorflag}"
+alias la="ls -HlAF ${colorflag}"
 
 # List only directories
 alias lsd="ls -lF ${colorflag} | grep --color=never '^d'"
