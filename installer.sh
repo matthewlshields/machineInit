@@ -210,6 +210,60 @@ install_kubectl() {
 	sudo apt-get install -y kubectl
 }
 
+install_intellij() {
+	echo "Installing IntelliJ IDEA..."
+
+	# Fetch the most recent version
+	# VERSION=$(wget "https://www.jetbrains.com/intellij-repository/releases" -qO- | grep -P -o -m 1 "(?<=https://www.jetbrains.com/intellij-repository/releases/com/jetbrains/intellij/idea/BUILD/)[^/]+(?=/)")
+	VERSION=183.5153.8
+
+	echo "$VERSION"
+	# Prepend base URL for download
+	URL="https://download.jetbrains.com/idea/ideaIC-$VERSION.tar.gz"
+
+	echo $URL
+
+	# Truncate filename
+	FILE=$(basename ${URL})
+
+	# Set download directory
+	DEST=/home/matthew/Downloads/$FILE
+
+	echo "Downloading idea-IC-$VERSION to $DEST..."
+
+	# Download binary
+	wget -cO ${DEST} ${URL} --read-timeout=5 --tries=0
+
+	echo "Download complete!"
+
+	# Set directory name
+	DIR="/opt/idea-IC-$VERSION"
+
+	echo "Installing to $DIR"
+
+	# Untar file
+	if mkdir ${DIR}; then
+		tar -xzf ${DEST} -C ${DIR} --strip-components=1
+	fi
+
+	# Grab executable folder
+	BIN="$DIR/bin"
+
+	# Add permissions to install directory
+	chmod -R +rwx ${DIR}
+
+	# Set desktop shortcut path
+	DESK=/usr/share/applications/IDEA.desktop
+
+	# Add desktop shortcut
+	echo -e "[Desktop Entry]\nEncoding=UTF-8\nName=IntelliJ IDEA\nComment=IntelliJ IDEA\nExec=${BIN}/idea.sh\nIcon=${BIN}/idea.png\nTerminal=false\nStartupNotify=true\nType=Application" -e > ${DESK}
+
+	# Create symlink entry
+	ln -s ${BIN}/idea.sh /usr/local/bin/idea
+
+	echo "Done."  
+}
+
 usage() {
 	echo -e "install.sh\\n\\tThis script installs my basic setup for a debian laptop\\n"
 	echo "Usage:"
@@ -221,6 +275,7 @@ usage() {
 	echo "  pia                                 - configure Private Internet Access with OpenVPN"
 	echo "  chrome                              - install Chrome browser"
 	echo "  kubectl								- install Kubernetes kubectl"
+	echo "  intellij							- install Intellij"
 }
 
 main() {
@@ -257,6 +312,9 @@ main() {
 	elif [[ $cmd == "kubectl" ]]; then
 		check_is_sudo
 		install_kubectl
+	elif [[ $cmd == "intellij" ]]; then
+		check_is_sudo
+		install_intellij
 	else
 		usage
 	fi
