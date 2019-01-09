@@ -264,6 +264,16 @@ install_intellij() {
 	echo "Done."  
 }
 
+install_vscode_extensions() {
+	code --install-extension peterjausovec.vscode-docker
+	code --install-extension jenkinsxio.vscode-jx-tools
+	code --install-extension bierner.markdown-preview-github-styles
+	code --install-extension ms-python.python
+	code --install-extension ms-kubernetes-tools.vscode-kubernetes-tools
+Preview
+
+}
+
 usage() {
 	echo -e "install.sh\\n\\tThis script installs my basic setup for a debian laptop\\n"
 	echo "Usage:"
@@ -276,6 +286,8 @@ usage() {
 	echo "  chrome                              - install Chrome browser"
 	echo "  kubectl								- install Kubernetes kubectl"
 	echo "  intellij							- install Intellij"
+	echo "  vscode-ext							- install VS Code extensions"
+
 }
 
 main() {
@@ -315,6 +327,8 @@ main() {
 	elif [[ $cmd == "intellij" ]]; then
 		check_is_sudo
 		install_intellij
+	elif [[ $cmd == "vscode-ext" ]]; then
+		install_vscode_extensions
 	else
 		usage
 	fi
