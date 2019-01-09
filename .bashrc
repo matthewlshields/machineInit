@@ -94,5 +94,5 @@ if [[ -f "${HOME}/.bash_profile" ]]; then
 	source "${HOME}/.bash_profile"
 fi
 
-# Set the Gnome Terminal to a dark theme
-#gsettings set org.gnome.Terminal.Legacy.Settings theme-variant 'system'
+## Auto completion for kubectl
+source <(kubectl completion bash)
