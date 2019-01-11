@@ -38,3 +38,4 @@ done
 
 # Add programs to path
 export PATH=$PATH:~/.jx/bin # Jenkins X cli
+export PATH=~/.local/bin:$PATH
