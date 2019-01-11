@@ -270,8 +270,17 @@ install_vscode_extensions() {
 	code --install-extension bierner.markdown-preview-github-styles
 	code --install-extension ms-python.python
 	code --install-extension ms-kubernetes-tools.vscode-kubernetes-tools
-Preview
+}
 
+install_jenkins_x_cli() {
+	mkdir -p ~/.jx/bin
+
+	# Get the latest release URL
+	local JX_TYPE=linux-amd64
+	local JX_DOWNLOAD_URL=$(curl -sL https://api.github.com/repos/jenkins-x/jx/releases/latest | jq -r ".assets[] | select(.name | test(\"${JX_TYPE}*.tar.gz$\")) | .browser_download_url")
+
+	# Download the latest release
+	curl -L ${JX_DOWNLOAD_URL} | tar xzv -C ~/.jx/bin
 }
 
 usage() {
@@ -287,6 +296,7 @@ usage() {
 	echo "  kubectl								- install Kubernetes kubectl"
 	echo "  intellij							- install Intellij"
 	echo "  vscode-ext							- install VS Code extensions"
+	echo "  jx-cli								- install Jenkins X cli"
 
 }
 
@@ -329,6 +339,8 @@ main() {
 		install_intellij
 	elif [[ $cmd == "vscode-ext" ]]; then
 		install_vscode_extensions
+	elif [[ $cmd == "jx-cli" ]]; then
+		install_jenkins_x_cli
 	else
 		usage
 	fi

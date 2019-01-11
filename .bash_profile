@@ -36,3 +36,5 @@ done
 	grep -v "[?*]" | cut -d " " -f2 | \
 	tr ' ' '\n')" scp sftp ssh
 
+# Add programs to path
+export PATH=$PATH:~/.jx/bin # Jenkins X cli
